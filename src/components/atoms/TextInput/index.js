@@ -25,7 +25,7 @@ const TextInput = ({placeholder, value, setValue, validation, filter}) => {
 
     if(!isValid && fontSizeAnimState != 1) {        //kalo variabel isValid kosong, berarti
                                                     //nda ada error, maka jalankan animasi
-                                                    //mo se muncul tu teks error sampe kelar
+                                                    //mo se sembunyi tu teks error sampe kelar
                                                     //kong simpan depe state.
         Animated.timing(fontSizeAnim, {
             toValue: 0,
@@ -35,7 +35,7 @@ const TextInput = ({placeholder, value, setValue, validation, filter}) => {
         setFontSizeAnimState(1)
     } else if (isValid && fontSizeAnimState != 0) { //kalo variabel isValid nda kosong,
                                                     //berarti ada error, maka jalankan
-                                                    //animasi mo se sembunyi tu eks error
+                                                    //animasi mo se muncul tu teks error
                                                     //sampe kelar, kong simpan depe state.
         Animated.timing(fontSizeAnim, {
             toValue: 10,
