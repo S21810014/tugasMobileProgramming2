@@ -1,0 +1,210 @@
+import React, { useRef, useState } from 'react';
+import {
+  Animated,
+  Dimensions,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native';
+
+import {
+  Colors,
+} from 'react-native/Libraries/NewAppScreen';
+
+import Button from './src/components/atoms/Button'
+import Overlay from './src/components/molecules/Overlay'
+
+const App = () => {
+  const shrinkTransition = useRef(new Animated.Value(0)).current
+  const shrinkTransition2 = useRef(new Animated.Value(0)).current
+  StatusBar.setBarStyle('dark-content')
+
+  const [shrinkState, setShrinkState] = useState(0)
+  const [currPage, setCurrPage] = useState('regis')
+
+  const menuOptions = [
+    {
+      label: 'Registration',
+      onPress: () => setCurrPage('regis')
+    },
+    {
+      label: 'Users List',
+      onPress: () => setCurrPage('ulist')
+    },
+  ]
+
+  const pages = {
+    'regis' : <View><Text>regis</Text></View>,
+    'ulist' : <View><Text>ulist</Text></View>
+  }
+
+  const shrinkToggleHandler = () => {
+    if(shrinkState != 0) {
+      Animated.timing(shrinkTransition2, {
+        toValue: 1.0,
+        duration: 500,
+        useNativeDriver: false
+      }).start()
+      Animated.timing(shrinkTransition, {
+        toValue: 1.0,
+        duration: 500,
+        useNativeDriver: true
+      }).start(({finished}) => finished && setShrinkState(0))
+    } else if (shrinkState != 1) {
+      Animated.timing(shrinkTransition2, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false
+      }).start()
+      Animated.timing(shrinkTransition, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true
+      }).start(({finished}) => finished && setShrinkState(1))
+    }
+  }
+
+  const shrinkTransform = {
+    transform:[
+      {translateX: shrinkTransition.interpolate({
+        inputRange: [0, 1],
+        outputRange: [Dimensions.get('window').width/5.5, 0]
+      })}, 
+      {translateY: shrinkTransition.interpolate({
+        inputRange: [0, 1],
+        outputRange: [Dimensions.get('window').width/7.5, 0]
+      })},
+      {scale: shrinkTransition.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0.6, 1.0]
+      })}
+    ],
+    height: '100%',
+  }
+
+  const slideTransform = {
+    transform: [
+      {translateX: shrinkTransition.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, -150]
+      })}
+    ]
+  }
+
+  return (
+    <SafeAreaView>
+      <StatusBar translucent backgroundColor='transparent'/>
+      <Animated.View style={shrinkTransform}>
+        <Animated.View style={{
+          borderRadius: shrinkTransition2.interpolate({
+            inputRange: [0, 1],
+            outputRange: [25, 0]
+          }),
+          flex: 1,
+          elevation: shrinkTransition2.interpolate({
+            inputRange: [0, 1],
+            outputRange: [8, 0]
+          }),
+          backgroundColor: shrinkTransition2.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['hsla(0, 0%, 100%, 1.0)', 'hsla(0, 0%, 100%, 0.0)']
+          }),
+          overflow: 'hidden'
+          }}>
+        {
+          pages[currPage]
+        }
+        </Animated.View>
+      </Animated.View>
+      <Overlay  menuOptions={menuOptions} 
+                shrinkState={shrinkState} 
+                setShrinkState={setShrinkState}
+                shrinkTransition={shrinkTransition}/>
+    </SafeAreaView>
+  );
+  // return (
+  //   <SafeAreaView>
+  //     <StatusBar translucent backgroundColor='transparent'/>
+  //     <Animated.View style={shrinkTransform}>
+  //       <Animated.View style={{
+  //         borderRadius: shrinkTransition2.interpolate({
+  //           inputRange: [0, 1],
+  //           outputRange: [25, 0]
+  //         }),
+  //         flex: 1,
+  //         elevation: shrinkTransition2.interpolate({
+  //           inputRange: [0, 1],
+  //           outputRange: [8, 0]
+  //         }),
+  //         backgroundColor: shrinkTransition2.interpolate({
+  //           inputRange: [0, 1],
+  //           outputRange: ['hsla(0, 0%, 100%, 1.0)', 'hsla(0, 0%, 100%, 0.0)']
+  //         }),
+  //         overflow: 'hidden'
+  //         }}>
+  //       {
+  //         pages[currPage]
+  //       }
+  //       </Animated.View>
+  //     </Animated.View>
+  //     <View style={styles.overlay}>
+  //       <Animated.View style={[styles.sidebar,slideTransform]}>
+  //         {
+  //           menuOptions.map((el, idx) =>
+  //             <View key={idx} style={{height: 50}}>
+  //               <Button label={el.label} color='#eee' onPress={el.onPress}/>
+  //             </View>
+  //           )
+  //         }
+  //       </Animated.View>
+  //       <TouchableOpacity style={styles.actionButton}
+  //                         onPressIn={() => shrinkToggleHandler()}>
+  //         <Text style={{fontSize: 24}}>Ξ</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   </SafeAreaView>
+  // );
+};
+
+const styles = StyleSheet.create({
+  menuItems: {
+    width: 130,
+    paddingVertical: 10,
+    alignItems: 'center',
+    backgroundColor: 'hsla(0, 0%, 0%, 0.05)',
+    margin: 5,
+    borderRadius: 25
+  },
+  actionButton: {
+    transform: [
+      {translateX: 15},
+      {translateY: 25},
+    ],
+    position: 'absolute',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: 'white',
+    elevation: 8
+  },
+  sidebar: {
+    position: 'absolute', 
+    backgroundColor: 'white',
+    elevation: 5, 
+    height: Dimensions.get('window').height,
+    paddingTop: 100,
+    width: 130
+  },
+  overlay: {
+    position: 'absolute', 
+    backgroundColor: 'transparent', 
+    width: 200, 
+    height: Dimensions.get('window').height
+  }
+})
+
+export default App;

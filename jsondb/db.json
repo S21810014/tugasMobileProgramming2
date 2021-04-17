@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": "67a9e7bb-7cab-4f41-8c77-f4d40619812b",
+      "firstName": "Timothy",
+      "lastName": "Tiwow",
+      "email": "s21810014@student.unklab.ac.id"
+    },
+    {
+      "id": "7d494c4d-10b0-44db-b654-e52398e75252",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "jdoe@gmail.com"
+    },
+    {
+      "id": "b025b67e-2ba2-49d7-918e-ed956a69eac7",
+      "firstName": "Samara",
+      "lastName": "Hilton",
+      "email": "shilton@gmail.com"
+    },
+    {
+      "id": "9ab498c0-e710-4cf8-9719-11775263ea98",
+      "firstName": "Gerald",
+      "lastName": "Jacobs",
+      "email": "gacobs@oracle.com"
+    }
+  ]
+}
